@@ -1,4 +1,4 @@
-package carte.game.khess
+package carte.game.khess.model
 
 data class Square(
 

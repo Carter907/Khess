@@ -1,14 +1,13 @@
 package carte.game.khess
 
 import carte.game.khess.controllers.SquareController
+import carte.game.khess.model.Board
 import carte.toolfx.core.Controller
 import carte.toolfx.core.runFxmlElement
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.GridPane
-import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
-import javafx.scene.shape.Rectangle
 
 /**
  * Links the Board UI to the Board class
@@ -23,10 +22,10 @@ class BoardLinker(private val context: Controller, private val board: Board, pri
      * */
 
     fun link() {
-        board.construct()
+        board.initializeToStartPosition();
         grid.maxWidth = board.squareSize * 8;
         grid.maxHeight = board.squareSize * 8;
-        board.mat.forEach {
+        board.squareMat.forEach {
             it.forEach { sqr ->
                 grid.add(
                     runFxmlElement<SquareController>(context) {
