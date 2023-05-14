@@ -23,7 +23,7 @@ data class Board(
      * Constructs the board based on the index of the square in the matrix
      *
      */
-    fun constructSquares() {
+    private fun constructSquares(playingAs: Int) {
         for (r in squareMat.indices) {
             for (f in squareMat[r].indices) {
 
@@ -43,7 +43,7 @@ data class Board(
     }
 
 
-    fun addPieces(fen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR") {
+    private fun addPieces(fen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", playingAs: Int) {
         var ch: Char
         var rank = 8
         var file = 1
@@ -69,10 +69,14 @@ data class Board(
         }
 
     }
+    /**
+     * method used to start a boards contents to the initial start position playing as black
+     *
+     */
 
-    fun initializeToStartPosition() {
-        constructSquares();
-        addPieces();
+    fun initializeToStartPosition(playingAs: Int) {
+        constructSquares(playingAs = playingAs);
+        addPieces(playingAs = playingAs);
         pieceSquareMapping =
             Array(8) { r ->
                 Array(8) { f ->

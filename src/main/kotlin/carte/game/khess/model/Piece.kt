@@ -6,6 +6,7 @@ data class Piece(
     val type: Type = Type.PAWN,
     val team: Team = Team.BLACK
 ) {
+
     constructor(rank: Int, file: Int, fenChar: Char) : this(
         file, rank,
         when (fenChar.toLowerCase()) {

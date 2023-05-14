@@ -1,9 +1,12 @@
 package carte.game.khess
 
+import carte.game.khess.controllers.PieceController
 import carte.game.khess.controllers.SquareController
 import carte.game.khess.model.Board
+import carte.game.khess.model.Team
 import carte.toolfx.core.Controller
 import carte.toolfx.core.runFxmlElement
+import javafx.scene.image.Image
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.GridPane
@@ -22,31 +25,56 @@ class BoardLinker(private val context: Controller, private val board: Board, pri
      * */
 
     fun link() {
-        board.initializeToStartPosition();
+        board.initializeToStartPosition(playingAs = Team.BLACK.ordinal);
         grid.maxWidth = board.squareSize * 8;
         grid.maxHeight = board.squareSize * 8;
-        board.squareMat.forEach {
-            it.forEach { sqr ->
-                grid.add(
-                    runFxmlElement<SquareController>(context) {
-                        squareRoot.minWidth = board.squareSize;
-                        squareRoot.minHeight = board.squareSize;
-                        squareRoot.background = Background(
-                            BackgroundFill(Color.web(
-                                when (sqr.color) {
-                                    1 -> board.darkSquareColor;
-                                    0 -> board.lightSquareColor;
-                                    else -> error("no color")
-                                }
-                            ), null, null,))
-                    }.squareRoot,
-                    sqr.file,
-                    sqr.rank,
-                )
+
+        board.pieceSquareMapping.forEach {
+            it.forEach { map ->
+                map.entries.forEach { entry ->
+
+                    grid.add(
+                        runFxmlElement<SquareController>(context) {
+                            colorRoot.minWidth = board.squareSize;
+                            colorRoot.minHeight = board.squareSize;
+                            colorRoot.background = Background(
+                                BackgroundFill(
+                                    Color.web(
+                                        when (entry.key.color) {
+                                            1 -> board.darkSquareColor;
+                                            0 -> board.lightSquareColor;
+                                            else -> error("no color")
+                                        }
+                                    ),
+                                    null, null,
+                                )
+                            )
 
 
+                        }.squareRoot.apply {
+
+                            children.add(
+                                runFxmlElement<PieceController>(context) {
+
+                                    entry.value?.apply {
+                                        val path = "/sets/set_0/${team.name.toLowerCase()}_${type.name.toLowerCase()}.png";
+                                        pieceImage.image =
+                                            Image(javaClass.getResource(path)
+                                                ?.toExternalForm() ?: error("could not locate piece image ($path)"))
+
+                                    }
+
+
+                                }.pieceImage
+                            )
+
+
+                        },
+                        entry.key.file,
+                        entry.key.rank,
+                    )
+                }
             }
-
         }
 
     }

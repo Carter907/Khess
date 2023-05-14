@@ -19,7 +19,9 @@ import java.util.*
 class SquareController : Controller() {
 
     @FXML
-    lateinit var squareRoot: Pane;
+    lateinit var squareRoot: StackPane;
+    @FXML
+    lateinit var colorRoot: Pane;
 
 
     override fun onCreate() {
