@@ -2,6 +2,7 @@ package carte.game.khess.controllers
 
 import carte.game.khess.model.Board
 import carte.game.khess.BoardLinker
+import carte.game.khess.model.Team
 import carte.toolfx.core.Controller
 import carte.toolfx.core.Screen
 import carte.toolfx.core.runFxmlElement
@@ -54,7 +55,7 @@ class HomeController : Controller() {
 
         val board = Board();
         val boardLinker = BoardLinker(boardPaneController, board, boardPaneController.boardPane);
-        boardLinker.link()
+        boardLinker.link(Team.BLACK.ordinal)
 
         board.printAllContents();
 

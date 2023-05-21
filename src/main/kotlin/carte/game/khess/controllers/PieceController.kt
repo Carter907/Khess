@@ -4,6 +4,7 @@ import carte.toolfx.core.Controller
 import carte.toolfx.core.Element
 
 import javafx.fxml.FXML
+import javafx.geometry.Rectangle2D
 import javafx.scene.image.ImageView
 
 @Element("/fxml/nodes/piece.fxml")
@@ -16,6 +17,8 @@ class PieceController : Controller(){
 
 
     override fun onCreate() {
+
+
 
     }
 }

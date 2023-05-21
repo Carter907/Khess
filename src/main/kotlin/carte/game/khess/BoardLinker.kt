@@ -24,8 +24,8 @@ class BoardLinker(private val context: Controller, private val board: Board, pri
      * maps each square present in the matrix with it's corresponding node of the grid UI.
      * */
 
-    fun link() {
-        board.initializeToStartPosition(playingAs = Team.BLACK.ordinal);
+    fun link(playingAs: Int) {
+        board.initializeToStartPosition();
         grid.maxWidth = board.squareSize * 8;
         grid.maxHeight = board.squareSize * 8;
 
