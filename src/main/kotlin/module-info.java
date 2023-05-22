@@ -2,7 +2,6 @@ module khessfx {
     requires kotlin.stdlib;
     requires javafx.controls;
     requires javafx.fxml;
-    requires kotlinx.coroutines.core;
     requires carte.controllerfx;
 
     opens carte.game.khess.controllers to javafx.fxml;

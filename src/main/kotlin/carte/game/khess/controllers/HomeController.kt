@@ -9,6 +9,8 @@ import carte.toolfx.core.runFxmlElement
 import javafx.fxml.FXML
 import javafx.scene.control.ButtonType
 import javafx.scene.control.Dialog
+import javafx.scene.image.Image
+import javafx.scene.image.ImageView
 import javafx.scene.layout.StackPane
 
 
@@ -17,13 +19,22 @@ class HomeController : Controller() {
 
     @FXML
     lateinit var backgroundPane: StackPane;
+
+    @FXML
+    lateinit var flipBoardIcon: ImageView;
+
     override fun onCreate() {
+
+
+
+
 
         /*
         * creating the board pane controller to get access to the fxml nodes. these nodes make of the background
         * ui surrounding the board.
         *
         * */
+
 
         val dialog: Dialog<String> = Dialog();
         dialog.dialogPane.buttonTypes.add(ButtonType.OK)
@@ -59,7 +70,16 @@ class HomeController : Controller() {
 
         board.printAllContents();
 
+        val image = Image(javaClass.getResource("/icons/flip_board.png").toExternalForm())
+        flipBoardIcon.image = image;
+
+        flipBoardIcon.setOnMouseClicked {
+            boardLinker.flipBoard();
+        }
+
         backgroundPane.children.addAll(boardPaneController.boardPane, piecePaneController.piecePane);
+
+
 
 
     }

@@ -7,9 +7,25 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.StackPane?>
-<StackPane fx:id="backgroundPane" xmlns="http://javafx.com/javafx"
-           xmlns:fx="http://javafx.com/fxml"
-           fx:controller="carte.game.khess.controllers.HomeController"
-           >
 
-</StackPane>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<BorderPane fx:id="backgroundRoot" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="carte.game.khess.controllers.HomeController">
+    <padding>
+        <Insets top="10" left="10" right="10" bottom="10">
+
+        </Insets>
+    </padding>
+    <center>
+        <StackPane fx:id="backgroundPane"/>
+    </center>
+
+    <left>
+        <ImageView fx:id="flipBoardIcon"/>
+    </left>
+
+</BorderPane>
+

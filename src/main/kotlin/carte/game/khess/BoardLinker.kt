@@ -78,4 +78,8 @@ class BoardLinker(private val context: Controller, private val board: Board, pri
         }
 
     }
+
+    fun flipBoard() {
+
+    }
 }

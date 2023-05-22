@@ -35,6 +35,11 @@
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
+                <configuration>
+                    <mainClass>
+                        carte.game.khess.App
+                    </mainClass>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -73,6 +78,7 @@
                     <mainClass>MainKt</mainClass>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
