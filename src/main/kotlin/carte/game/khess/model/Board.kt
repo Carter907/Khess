@@ -1,6 +1,8 @@
 package carte.game.khess.model
 
+import java.util.function.Consumer
 import kotlin.math.abs
+import kotlin.math.absoluteValue
 
 
 /**
@@ -19,7 +21,7 @@ data class Board(
      */
     val squareMat: Array<Array<Square>> = Array(8) { Array(8) { Square() } }
     val pieceMat: Array<Array<Piece?>> = Array(8) { Array(8) { null } }
-    lateinit var pieceSquareMapping: Array<Array<Map<Square, Piece?>>>;
+    lateinit var pieceSquareMat: Array<Array<Map<Square, Piece?>>>;
 
     /**
      * Constructs the board based on the index of the square in the matrix
@@ -36,40 +38,69 @@ data class Board(
                     } else {
                         1
                     },
-                    rank = r + 1,
+                    rank = abs(r - 8),
                     file = f + 1
 
                 )
             }
         }
     }
+    private fun applyToPairsMat(consumer: (Map<Square, Piece?>) -> Unit) {
+        for (row in pieceSquareMat) {
+            row.forEach(consumer);
+        }
+    }
+    private fun applyToPieceMat(consumer: (Piece?) -> Unit) {
+        for (row in pieceMat) {
+            row.forEach(consumer);
+        }
+    }
+    private fun applyToSquareMat(consumer: (Square) -> Unit) {
+        for (row in squareMat) {
+            row.forEach(consumer);
+        }
+    }
+
+
+    fun flipBoard() {
+
+
+    }
 
 
     private fun addPieces(fen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR") {
-        var ch: Char
         var file = 1;
+        var rank = 8;
+
         var i = 0;
+        while (i < fen.length) {
 
-        var rank = 1;
-        while (i in fen.indices) {
-            ch = fen[i]
-            if (ch == '/') {
-                rank++
-                file = 0
-                i++
-                file++
-                continue
-            } else if (Character.isDigit(ch)) {
-                file += (ch.toString() + "").toInt() - 1
-                i++
-                file++
-                continue
+            if (fen[i] == '/') {
+                rank--;
+                file = 1;
+
             }
-            pieceMat[rank - 1][file - 1] = Piece(rank, file, ch);
+            else if (fen[i].isDigit()) {
+                file+=fen[i].toInt();
 
-            i++
-            file++
+            } else {
+
+
+
+                pieceMat[abs(rank-8)][file-1] = Piece(rank, file, fen[i]);
+
+                file++;
+
+            }
+            i++;
+
+
+
         }
+
+
+
+
 
 
     }
@@ -82,7 +113,7 @@ data class Board(
     fun initializeToStartPosition() {
         constructSquares();
         addPieces();
-        pieceSquareMapping =
+        pieceSquareMat =
             Array(8) { r ->
                 Array(8) { f ->
                     mapOf(Pair(squareMat[r][f], pieceMat[r][f]))
@@ -90,18 +121,35 @@ data class Board(
             }
     }
 
+    /**
+     * used to print visualize the matrix created by the this class.
+     *
+     */
+
     fun printAllContents() {
 
-        println("Both contents:")
-        for (r in pieceSquareMapping.indices) {
-            for (pair in pieceSquareMapping[r]) {
-                print(pair)
+        println("piece mat:")
+        for (r in pieceSquareMat.indices) {
+            for (map in pieceSquareMat[r]) {
+                map.entries.iterator().next().apply {
+                    print("[${value?.file},${value?.rank}]")
+                }
+
 
             }
             println();
         }
+        println("square mat:")
+        for (r in pieceSquareMat.indices) {
+            for (map in pieceSquareMat[r]) {
+                map.entries.iterator().next().apply {
+                    print("[${key.file},${key.rank}]")
+                }
 
 
+            }
+            println();
+        }
     }
 
 }

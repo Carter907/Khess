@@ -3,7 +3,6 @@ package carte.game.khess
 import carte.game.khess.controllers.PieceController
 import carte.game.khess.controllers.SquareController
 import carte.game.khess.model.Board
-import carte.game.khess.model.Team
 import carte.toolfx.core.Controller
 import carte.toolfx.core.runFxmlElement
 import javafx.scene.image.Image
@@ -29,7 +28,7 @@ class BoardLinker(private val context: Controller, private val board: Board, pri
         grid.maxWidth = board.squareSize * 8;
         grid.maxHeight = board.squareSize * 8;
 
-        board.pieceSquareMapping.forEach {
+        board.pieceSquareMat.forEach {
             it.forEach { map ->
                 map.entries.forEach { entry ->
 

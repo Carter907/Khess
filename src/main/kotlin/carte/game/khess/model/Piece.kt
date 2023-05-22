@@ -8,7 +8,7 @@ data class Piece(
 ) {
 
     constructor(rank: Int, file: Int, fenChar: Char) : this(
-        file, rank,
+        rank = rank, file = file,
         when (fenChar.toLowerCase()) {
             'r' -> Type.ROOK
             'b' -> Type.BISHOP
