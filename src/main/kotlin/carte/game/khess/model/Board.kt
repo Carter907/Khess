@@ -62,10 +62,6 @@ data class Board(
     }
 
 
-    fun flipBoard() {
-
-
-    }
 
 
     private fun addPieces(fen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR") {
@@ -81,7 +77,7 @@ data class Board(
 
             }
             else if (fen[i].isDigit()) {
-                file+=fen[i].toInt();
+                file+=fen.substring(i,i+1).toInt();
 
             } else {
 
@@ -110,9 +106,9 @@ data class Board(
      *
      */
 
-    fun initializeToStartPosition() {
+    fun initializeToStartPosition(startPositionFen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR") {
         constructSquares();
-        addPieces();
+        addPieces(startPositionFen);
         pieceSquareMat =
             Array(8) { r ->
                 Array(8) { f ->

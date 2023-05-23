@@ -7,6 +7,7 @@ import carte.toolfx.core.Controller
 import carte.toolfx.core.Screen
 import carte.toolfx.core.runFxmlElement
 import javafx.fxml.FXML
+import javafx.geometry.Rectangle2D
 import javafx.scene.control.ButtonType
 import javafx.scene.control.Dialog
 import javafx.scene.image.Image
@@ -33,21 +34,23 @@ class HomeController : Controller() {
             piecePane.maxHeightProperty().bind(boardPaneController.boardPane.heightProperty().subtract(10))
 
         }
-        
+
         backgroundPane.prefWidthProperty().bind(scene.widthProperty())
 
 
         val board = Board();
         val boardLinker = BoardLinker(boardPaneController, board, boardPaneController.boardPane);
-        boardLinker.link(Team.BLACK.ordinal)
+        boardLinker.link(Team.BLACK.ordinal, startPositionFen = "r1bk3r/p2pBpNp/n4n2/1p1NP2P/6P1/3P4/P1P1K3/q5b1")
 
         board.printAllContents();
 
         val image = Image(javaClass.getResource("/icons/flip_board.png").toExternalForm())
         flipBoardIcon.image = image;
-
+        flipBoardIcon.viewport = Rectangle2D(0.0,0.0,image.width, image.height)
+        flipBoardIcon.toFront();
+        flipBoardIcon.isPickOnBounds = true;
         flipBoardIcon.setOnMouseClicked {
-            boardLinker.flipBoard();
+            boardLinker.flipBoardPane()
         }
 
         backgroundPane.children.addAll(boardPaneController.boardPane, piecePaneController.piecePane);
