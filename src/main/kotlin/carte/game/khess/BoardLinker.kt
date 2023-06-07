@@ -2,8 +2,7 @@ package carte.game.khess
 
 import carte.game.khess.controllers.PieceController
 import carte.game.khess.controllers.SquareController
-import carte.game.khess.model.Board
-import carte.game.khess.model.Team
+import carte.game.khess.model.*
 import carte.toolfx.core.Controller
 import carte.toolfx.core.runFxmlElement
 import javafx.scene.image.Image
@@ -11,6 +10,7 @@ import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.GridPane
 import javafx.scene.paint.Color
+import javafx.scene.paint.Paint
 import kotlin.math.abs
 
 /**
@@ -27,7 +27,10 @@ class BoardLinker(private val context: Controller, private val board: Board, pri
      * maps each square present in the matrix with it's corresponding node of the grid UI.
      * */
 
-    fun link(playingAs: Int = boardOrientation, startPositionFen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR") {
+    fun link(
+        playingAs: Int = Team.WHITE.ordinal,
+        startPositionFen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+    ) {
         boardOrientation = playingAs;
         board.initializeToStartPosition(startPositionFen);
         grid.maxWidth = board.squareSize * 8;
@@ -37,69 +40,83 @@ class BoardLinker(private val context: Controller, private val board: Board, pri
 
     }
 
+
     private fun addContents() {
         board.pieceSquareMat.forEach {
             it.forEach { map ->
                 map.entries.forEach { entry ->
-                    var file: Int;
-                    var rank: Int;
-
-                    if (boardOrientation == Team.BLACK.ordinal) {
-                        rank = entry.key.rank
-                        file = abs(entry.key.file - 9)
-
-                    } else {
-                        rank = abs(entry.key.rank - 9)
-                        file = entry.key.file
-
-
-                    }
-                    grid.add(
-                        runFxmlElement<SquareController>(context) {
-                            colorRoot.minWidth = board.squareSize;
-                            colorRoot.minHeight = board.squareSize;
-                            colorRoot.background = Background(
-                                BackgroundFill(
-                                    Color.web(
-                                        when (entry.key.color) {
-                                            1 -> board.darkSquareColor;
-                                            0 -> board.lightSquareColor;
-                                            else -> error("no color")
-                                        }
-                                    ),
-                                    null, null,
-                                )
-                            )
-
-
-                        }.squareRoot.apply {
-
-                            children.add(
-                                runFxmlElement<PieceController>(context) {
-
-                                    entry.value?.apply {
-                                        val path =
-                                            "/sets/set_0/${team.name.toLowerCase()}_${type.name.toLowerCase()}.png";
-                                        pieceImage.image =
-                                            Image(
-                                                javaClass.getResource(path)
-                                                    ?.toExternalForm() ?: error("could not locate piece image ($path)")
-                                            )
-
-                                    }
-
-
-                                }.pieceImage
-                            )
-
-
-                        },
-                        file,
-                        rank
-                    )
+                    addSquareAndPiece(entry.key, entry.value)
                 }
             }
         }
+    }
+    private fun addSquareAndPiece(currentSquare: Square, currentPiece: Piece?) {
+        val file: Int;
+        val rank: Int;
+
+        if (boardOrientation == Team.BLACK.ordinal) {
+            rank = currentSquare.rank
+            file = abs(currentSquare.file - 9)
+
+        } else {
+            rank = abs(currentSquare.rank - 9)
+            file = currentSquare.file
+
+
+        }
+        grid.add(
+            runFxmlElement<SquareController>(context) {
+                colorRoot.minWidth = board.squareSize;
+                colorRoot.minHeight = board.squareSize;
+                colorRoot.background = Background(
+                    BackgroundFill(
+                        setSquareColor(currentSquare.color),
+                        null, null,
+                    )
+                )
+
+
+            }.squareRoot.apply {
+
+                children.add(
+                    runFxmlElement<PieceController>(context) {
+
+                        currentPiece?.apply {
+
+                            setPieceImage(team, type)
+                        }
+
+
+                    }.pieceImage
+                )
+
+
+            },
+            file,
+            rank
+        )
+    }
+
+    private fun setSquareColor(color: Int): Paint =
+        Color.web(
+            when (color) {
+                1 -> board.darkSquareColor;
+                0 -> board.lightSquareColor;
+                else -> error("no color")
+            }
+        )
+
+
+
+
+    private fun PieceController.setPieceImage(team: Team, type: Type) {
+        val path =
+            "/sets/set_0/${team.name.toLowerCase()}_${type.name.toLowerCase()}.png";
+        pieceImage.image =
+            Image(
+                javaClass.getResource(path)
+                    ?.toExternalForm() ?: error("could not locate piece image ($path)")
+            )
     }
 
     private fun resetBoardPane() {
@@ -107,7 +124,9 @@ class BoardLinker(private val context: Controller, private val board: Board, pri
 
     }
 
-
+    /**
+     * Used to flip the board by setting boardOrientation to be opposite of its current value
+     */
     fun flipBoardPane() {
         resetBoardPane();
 

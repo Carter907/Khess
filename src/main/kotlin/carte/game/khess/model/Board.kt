@@ -135,17 +135,6 @@ data class Board(
             }
             println();
         }
-        println("square mat:")
-        for (r in pieceSquareMat.indices) {
-            for (map in pieceSquareMat[r]) {
-                map.entries.iterator().next().apply {
-                    print("[${key.file},${key.rank}]")
-                }
-
-
-            }
-            println();
-        }
     }
 
 }

@@ -26,8 +26,6 @@ class HomeController : Controller() {
 
     override fun onCreate() {
 
-
-
         val boardPaneController = runFxmlElement<BoardController>(this);
         val piecePaneController = runFxmlElement<PiecePaneController>(this) {
             piecePane.maxWidthProperty().bind(boardPaneController.boardPane.widthProperty().subtract(10))
@@ -40,14 +38,13 @@ class HomeController : Controller() {
 
         val board = Board();
         val boardLinker = BoardLinker(boardPaneController, board, boardPaneController.boardPane);
-        boardLinker.link(Team.BLACK.ordinal, startPositionFen = "r1bk3r/p2pBpNp/n4n2/1p1NP2P/6P1/3P4/P1P1K3/q5b1")
+        boardLinker.link(Team.WHITE.ordinal)
 
         board.printAllContents();
 
-        val image = Image(javaClass.getResource("/icons/flip_board.png").toExternalForm())
+        val image = Image(javaClass.getResource("/icons/flip_board.png")?.toExternalForm() ?: error("refresh not found"))
         flipBoardIcon.image = image;
         flipBoardIcon.viewport = Rectangle2D(0.0,0.0,image.width, image.height)
-        flipBoardIcon.toFront();
         flipBoardIcon.isPickOnBounds = true;
         flipBoardIcon.setOnMouseClicked {
             boardLinker.flipBoardPane()
